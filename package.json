@@ -1,0 +1,17 @@
+{
+  "name": "eventontime-backend",
+  "version": "1.0.0",
+  "description": "Event on time is a platform for planning events ",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "NodeJS",
+    "Express",
+    "Mongoose",
+    "JWT"
+  ],
+  "author": "Daniel Flores",
+  "license": "MIT"
+}
