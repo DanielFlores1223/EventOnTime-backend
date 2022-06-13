@@ -9,7 +9,6 @@ class Server {
 
           // you can access the routes with /api/nameRoute
           this.paths = {
-               example: 'example',
           }
 
           this.connectDB();
