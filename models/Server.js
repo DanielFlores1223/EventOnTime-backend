@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const { dbConnection } = require('../database/config');
+const { runSeeds } = require('../seeds')
 
 class Server {
      constructor() {
@@ -13,7 +14,7 @@ class Server {
 
           this.connectDB();
           this.middlewares();
-          this.initRoutes();
+          this.routes();
           this.seeds();
      }
 
@@ -26,14 +27,14 @@ class Server {
           this.app.use( cors() );
      }
 
-     initRoutes() {
+     routes() {
           for (const path in this.paths ) {
                this.app.use( `/api/${path}`, require(`../routes/${path}`) );
           }
      }
 
      async seeds() {
-
+          await runSeeds();
      }
 
 
