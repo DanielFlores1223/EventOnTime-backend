@@ -7,10 +7,6 @@ const UserSchema = new Schema({
           type: String,
           required: true,
      },
-     lastName: {
-          type: String,
-          required: true,
-     },
      email: {
           type: String,
           required: true,
@@ -25,7 +21,7 @@ const UserSchema = new Schema({
           required: true,
           default: false
      },
-     favorites: [{ type: ObjectId, ref: 'Service' }],
+     favorites: [{ type: ObjectId, ref: 'Service', default: [] }],
      status: {
           type: Boolean,
           required: true,

@@ -10,6 +10,8 @@ class Server {
 
           // you can access the routes with /api/nameRoute
           this.paths = {
+               user: 'user',
+               auth: 'auth',
           }
 
           this.connectDB();

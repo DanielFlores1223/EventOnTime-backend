@@ -13,10 +13,9 @@ const validateJWT = async (req, res, next) => {
      try {
           //verify if token is valid
           const { uid } = jwt.verify( token, process.env.SECRETPRIVATEKEY );
-
           const user = await User.findById( uid );
 
-          if ( !user || !user.state ) 
+          if ( !user || !user.status ) 
                return res.status(401).json( getJsonRes( false, 'token inválido' ) );
 
           req.user = user;
