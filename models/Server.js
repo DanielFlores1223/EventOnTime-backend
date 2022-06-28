@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+const fs = require('fs');
 const { dbConnection } = require('../database/config');
 const { runSeeds } = require('../seeds')
 
@@ -15,6 +16,7 @@ class Server {
           }
 
           this.connectDB();
+          this.createFolder();
           this.middlewares();
           this.routes();
           this.seeds();
@@ -22,6 +24,12 @@ class Server {
 
      async connectDB() {
           await dbConnection();
+     }
+
+     createFolder() { 
+          console.log()
+          if( !fs.existsSync('./uploads') )
+               fs.mkdirSync("./uploads");
      }
 
      middlewares() {
