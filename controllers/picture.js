@@ -47,6 +47,31 @@ const create = async ( req = request, res = response ) => {
      res.status(201).json( getJsonRes( true, 'Las imagenes se guardaron correctamente', result ) );
 }
 
+const deletePicture = async( req = request, res = response ) => {
+
+     try {
+          const { id } = req.params;
+
+          const picture = await Picture.findById( id );
+          const url = picture.url;
+          const nameExtension = url.split('/');
+          const name = nameExtension[ nameExtension.length - 1 ].split('.');
+          
+          await cloudinary.uploader.destroy( name[0] );
+
+          const result = await Picture.findByIdAndDelete( id );
+
+          res.status( 200 ).send( getJsonRes( true, 'La imagen fue elimanda correctamente', result ) );
+
+     } catch ( error ) {
+          console.log( error );
+          res.status( 400 ).send( getJsonRes( false, 'Algo salió mal...' ) );
+
+     }
+
+}
+
 module.exports = {
      create,
+     deletePicture
 }
