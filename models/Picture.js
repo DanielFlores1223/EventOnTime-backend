@@ -14,8 +14,13 @@ const PictureSchema = new Schema({
      document: {
           type: ObjectId,
           required: true
+     },
+     collectionDB: {
+          type: String,
+          enum: {
+               values: ['User', 'Service', 'Event', 'Section' ]
+          }
      }
-
 });
 
 module.exports = model( 'Picture', PictureSchema );

@@ -1,5 +1,6 @@
 const { Role, User, TypeAccount } = require('../models');
 
+/* IMPORTANT: All the custom validations for using in express-validator have to be async */
 const isValidRole = async ( role = '' ) => {
      const exist = await Role.findOne( { name: role } );
 
@@ -21,9 +22,8 @@ const emailExist = async ( email = '' ) => {
           throw new Error(`El correo que ingreso ya está registrado`);
 }
 
-
 module.exports = {
      isValidRole,
      isValidTypeAccount,
-     emailExist
+     emailExist,
 }

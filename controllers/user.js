@@ -4,6 +4,7 @@ const { request, response } = require('express');
 const { getJsonRes } = require('../helpers/json-responses');
 const bcryptjs = require('bcryptjs')
 const { User } = require('../models');
+const { uploadImageHelper } = require('../helpers')
 
 const create = async ( req = request, res = response ) => {
      try {

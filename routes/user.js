@@ -8,7 +8,7 @@ const { isValidRole,
 const { validateJWT, 
         validateRole, 
         validateTypeAccount, 
-        validateFields } = require('../middlewares');
+        validateFields, uploadImages } = require('../middlewares');
 
 const router = Router();
 

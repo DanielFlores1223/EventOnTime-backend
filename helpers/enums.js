@@ -12,7 +12,15 @@ const TypeAccountsEnum = {
      empresarial: 'Empresarial'
 }
 
+const CollectionsForImagesEnum = {
+     User: 'User', 
+     Service: 'Service', 
+     Event: 'Event', 
+     Section: 'Section'
+}
+
 module.exports = {
      RolesEnum,
-     TypeAccountsEnum
+     TypeAccountsEnum,
+     CollectionsForImagesEnum
 }
