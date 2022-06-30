@@ -1,7 +1,7 @@
 //TODO: Add picture in method login with google
 
 const { request, response } = require('express');
-const User = require('../models/User');
+const { User, Picture }= require('../models');
 const bcryptjs = require('bcryptjs');
 const { generateJWT, getJsonRes } = require('../helpers');
 const { googleVerify } = require('../helpers/google-verify');
@@ -59,14 +59,31 @@ const google = async ( req = request, res = response ) => {
 
                user = new User( data );
                await user.save();
+
+               // Register a Google Picture 
+               const dataPicture = {
+                    url: picture,
+                    name: `${name}-googleImg`,
+                    document: user._id,
+                    collectionDB: 'User'
+               }
+
+               const pictureNew = new Picture( dataPicture );
+               await pictureNew.save();
           }
 
           if( !user.status ) 
                return res.status( 401 ).json( getJsonRes( false, 'Tu usuario está bloqueado, contacte a un admin' ) );
-
+          
+          
+          const pictureInfo = await Picture.findOne( { document: user._id } );
           const token = await generateJWT( user._id );
           const info = user._doc;
-          const result = { name: info.name, account: info.account, role: info.role, token };
+          const result = { name: info.name, 
+                           account: info.account, 
+                           role: info.role,
+                           picture: pictureInfo, 
+                           token };
 
           res.status( 200 ).json( getJsonRes( true, `Bienvenido ${ result.name }`, result ) );
 
