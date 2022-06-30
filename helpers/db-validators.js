@@ -1,9 +1,20 @@
-const { Role, User, TypeAccount, Picture } = require('../models');
+const { Role, User, TypeAccount } = require('../models');
 const Models = require('../models');
+const { RolesEnum } = require('../helpers/enums')
 
 /* IMPORTANT: All the custom validations for using in express-validator have to be async */
 const isValidRole = async ( role = '' ) => {
      const exist = await Role.findOne( { name: role } );
+
+     if (!exist)
+          throw new Error(`El rol ${role} no existe`);
+}
+
+const isValidRoleWithoutAdmin = async ( role = '' ) => {
+     const exist = await Role.findOne( { name: role } );
+
+     if( exist.name === RolesEnum.admin )
+          throw new Error(`El rol ${role} no existe`);
 
      if (!exist)
           throw new Error(`El rol ${role} no existe`);
@@ -36,4 +47,5 @@ module.exports = {
      isValidTypeAccount,
      emailExist,
      documentExist,
+     isValidRoleWithoutAdmin
 }
