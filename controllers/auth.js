@@ -1,5 +1,3 @@
-//TODO: Add picture in method login with google
-
 const { request, response } = require('express');
 const { User, Picture }= require('../models');
 const bcryptjs = require('bcryptjs');
