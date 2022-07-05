@@ -10,6 +10,10 @@ const PaymentSchema = new Schema({
           type: String,
           required: true
      },
+     expiration: {
+          type: String,
+          required: true
+     },
      amount: {
           type: Number,
           required: true
@@ -24,7 +28,8 @@ const PaymentSchema = new Schema({
      },
      numberEvents: {
           type: Number,
-          required: true
+          required: true,
+          default: 0,
      },
      typeAccount: {
           type: String,

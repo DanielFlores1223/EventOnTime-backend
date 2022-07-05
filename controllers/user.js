@@ -1,7 +1,7 @@
 // TODO: Add a record of payment when the user is created
 
 const { request, response } = require('express');
-const { getJsonRes } = require('../helpers/json-responses');
+const { getJsonRes, generateJWT } = require('../helpers');
 const bcryptjs = require('bcryptjs')
 const { User } = require('../models');
 
@@ -88,6 +88,34 @@ const create = async ( req = request, res = response ) => {
      }
 }
 
+const register = async ( req = request, res = response ) => {
+     try {
+          const { name, email, password, status, account, role } = req.body;
+
+          const user = new User( { name, email, password, status, account, role } );
+
+          // Encrypting user password
+          const salt = bcryptjs.genSaltSync();
+          user.password = bcryptjs.hashSync(password, salt);
+
+          await user.save();
+
+          const token = await generateJWT( user._id );
+          const info = user._doc;
+          const result = { name: info.name, 
+                           account: info.account, 
+                           role: info.role,
+                           picture: pictureInfo, 
+                           token };
+
+          res.status( 201 ).json( getJsonRes( true, ` Bienvenido ${user.name} a Event on Time`, result ) );
+
+     } catch (error) {
+          console.log(error);
+          res.status( 400 ).send( getJsonRes( false, 'Algo salió mal...' ) );
+     }
+}
+
 // Update profile of the user
 const update = async ( req = request, res = response ) => {
 
@@ -131,6 +159,7 @@ module.exports = {
      getById,    
      getInfoProfile,
      create,
+     register,
      update,
      deleteOne,
 }
