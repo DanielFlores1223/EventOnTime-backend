@@ -90,9 +90,15 @@ const create = async ( req = request, res = response ) => {
 
 const register = async ( req = request, res = response ) => {
      try {
-          const { name, email, password, status, account, role } = req.body;
+          const { name, email, password, status, account, role, company, workstation } = req.body;
 
-          const user = new User( { name, email, password, status, account, role } );
+          let dataCompany = {};
+          if( company && workstation ) {
+               dataCompany = { company, workstation };
+          }
+          console.log(company)
+
+          const user = new User( { name, email, password, status, account, role, company: dataCompany } );
 
           // Encrypting user password
           const salt = bcryptjs.genSaltSync();
@@ -100,13 +106,19 @@ const register = async ( req = request, res = response ) => {
 
           await user.save();
 
-          const token = await generateJWT( user._id );
+          //const company = await Company.findOne( { user: user._id } );
+          const token = await generateJWT( user._doc._id );
           const info = user._doc;
           const result = { name: info.name, 
                            account: info.account, 
                            role: info.role,
-                           picture: pictureInfo, 
                            token };
+
+          if( Object.keys( info.company ).length > 0 )
+               result.company = info.company
+          
+          /*if ( company )
+               result.company = company;*/
 
           res.status( 201 ).json( getJsonRes( true, ` Bienvenido ${user.name} a Event on Time`, result ) );
 

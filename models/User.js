@@ -34,6 +34,10 @@ const UserSchema = new Schema({
      role: {
           type: String,
           required: true,
+     }, 
+     company: {
+          workstation: String,
+          company: String,
      }
 });
 
