@@ -57,7 +57,7 @@ router.post( '/register', [
         check( 'account', 'El rol es obligatorio' ).not().isEmpty(),
         check( 'account' ).custom( isValidTypeAccount ),
         validateFields,
-   ], controller.create );
+   ], controller.register );
 
 
 router.put( '/profile', [
