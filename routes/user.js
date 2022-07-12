@@ -36,7 +36,7 @@ router.post( '/', [
      validateJWT,
      validateRole( RolesEnum.admin ),
      check( 'name', 'El nombre es obligatorio').not().isEmpty(),
-     check( 'email', 'El correo no es válido' ).not().isEmail(),
+     check( 'email', 'El correo no es válido' ).isEmail(),
      check( 'email' ).custom( emailExist ),
      check( 'password', 'La contraseña es obligatoria' ).not().isEmpty(),
      check( 'role', 'El rol es obligatorio' ).not().isEmpty(),
@@ -49,13 +49,15 @@ router.post( '/', [
 // This route is for when the user wants to register himself from landing page
 router.post( '/register', [
         check( 'name', 'El nombre es obligatorio').not().isEmpty(),
-        check( 'email', 'El correo no es válido' ).not().isEmail(),
+        check( 'email', 'El correo no es válido' ).isEmail(),
         check( 'email' ).custom( emailExist ),
         check( 'password', 'La contraseña es obligatoria' ).not().isEmpty(),
         check( 'role', 'El rol es obligatorio' ).not().isEmpty(),
         check( 'role' ).custom( isValidRoleWithoutAdmin ),
         check( 'account', 'El rol es obligatorio' ).not().isEmpty(),
         check( 'account' ).custom( isValidTypeAccount ),
+        check( 'workstation', 'El puesto de trabajo no debe estar vacío' ).optional().not().isEmpty(),
+        check( 'company', 'La compañia no debe estar vacío' ).optional().not().isEmpty(),
         validateFields,
    ], controller.register );
 
@@ -65,6 +67,8 @@ router.put( '/profile', [
     check( 'name', 'El nombre no debe estar vacío').optional().not().isEmpty(),
     check( 'password', 'La contraseña no debe estar vacía').optional().not().isEmpty(),
     check( 'email', 'El correo no es válido' ).optional().isEmail(),
+    check( 'workstation', 'El puesto de trabajo no debe estar vacío' ).optional().not().isEmpty(),
+    check( 'company', 'La compañia no debe estar vacío' ).optional().not().isEmpty(),
     validateFields,
 ], controller.update );
 

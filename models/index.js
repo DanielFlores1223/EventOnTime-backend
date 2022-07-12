@@ -11,5 +11,5 @@ module.exports = {
      User, 
      Picture,
      ContactUs,
-     Payment,
+     Payment
 }

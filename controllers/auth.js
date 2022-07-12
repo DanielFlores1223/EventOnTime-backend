@@ -24,9 +24,10 @@ const login = async ( req = request, res = response ) => {
 
           const token = await generateJWT( user._id );
           
+          const picture = await Picture.findOne( { document: user._id } );
           const info = user._doc;
           const { name, account, role } = info;
-          const result = { name, account, role, token };
+          const result = { name, account, role, picture, token };
 
           res.status( 200 ).json( getJsonRes( true, `Bienvenido ${ name }`, result ) );
           
@@ -73,14 +74,14 @@ const google = async ( req = request, res = response ) => {
           if( !user.status ) 
                return res.status( 401 ).json( getJsonRes( false, 'Tu usuario está bloqueado, contacte a un admin' ) );
           
-          
+
           const pictureInfo = await Picture.findOne( { document: user._id } );
           const token = await generateJWT( user._id );
           const info = user._doc;
           const result = { name: info.name, 
                            account: info.account, 
                            role: info.role,
-                           picture: pictureInfo, 
+                           picture: pictureInfo,
                            token };
 
           res.status( 200 ).json( getJsonRes( true, `Bienvenido ${ result.name }`, result ) );
