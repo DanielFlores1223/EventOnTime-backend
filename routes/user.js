@@ -67,6 +67,8 @@ router.put( '/profile', [
     check( 'name', 'El nombre no debe estar vacío').optional().not().isEmpty(),
     check( 'password', 'La contraseña no debe estar vacía').optional().not().isEmpty(),
     check( 'email', 'El correo no es válido' ).optional().isEmail(),
+    check( 'workstation', 'El puesto de trabajo no debe estar vacío' ).optional().not().isEmpty(),
+    check( 'company', 'La compañia no debe estar vacío' ).optional().not().isEmpty(),
     validateFields,
 ], controller.update );
 

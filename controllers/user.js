@@ -57,10 +57,11 @@ const getById = async ( req = request, res = response ) => {
 const getInfoProfile = async ( req = request, res = response ) => {
 
      try {
-          const { _id } = req.user;
+
+          const { _id, account } = req.user;
           const user = await User.findById( _id );
           res.status( 200 ).json( getJsonRes( true, 'La información del usuario se encontró correctamente', user ) );
-     
+
      } catch (error) {
           console.log(error);
           res.status( 400 ).send( getJsonRes( false, 'Algo salió mal...' ) );
@@ -96,7 +97,6 @@ const register = async ( req = request, res = response ) => {
           if( company && workstation ) {
                dataCompany = { company, workstation };
           }
-          console.log(company)
 
           const user = new User( { name, email, password, status, account, role, company: dataCompany } );
 
@@ -106,7 +106,6 @@ const register = async ( req = request, res = response ) => {
 
           await user.save();
 
-          //const company = await Company.findOne( { user: user._id } );
           const token = await generateJWT( user._doc._id );
           const info = user._doc;
           const result = { name: info.name, 
@@ -116,9 +115,6 @@ const register = async ( req = request, res = response ) => {
 
           if( Object.keys( info.company ).length > 0 )
                result.company = info.company
-          
-          /*if ( company )
-               result.company = company;*/
 
           res.status( 201 ).json( getJsonRes( true, ` Bienvenido ${user.name} a Event on Time`, result ) );
 
@@ -132,14 +128,25 @@ const register = async ( req = request, res = response ) => {
 const update = async ( req = request, res = response ) => {
 
      try {
-          const { google, favorites, status, account, role, _id, ...rest } = req.body;
+          
+          let { google, favorites, status, account, role, _id, workstation, company, ...rest } = req.body;
 
           if( rest.password ) {
                const salt = bcryptjs.genSaltSync();
                rest.password = bcryptjs.hashSync( rest.password, salt );
           }
 
-          const user = await User.findByIdAndUpdate( req.user._id, rest, { new: true } );
+          if( company || workstation ) {
+
+               if( company )
+                    rest = { ...rest, 'company.company': company } ;
+
+               if( workstation )
+                    rest = { ...rest, 'company.workstation': workstation } ;
+          }
+
+
+          const user = await User.findByIdAndUpdate( req.user._id , rest , { new: true } );
 
           res.status( 200 ).send( getJsonRes( true, `Tu perfil se modificó correctamente`, user ) );
 
