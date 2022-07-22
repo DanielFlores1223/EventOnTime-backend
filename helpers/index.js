@@ -3,6 +3,7 @@ const dbValidators = require('./db-validators');
 const generateJWT = require('./generate-jwt');
 const withoutDBValidators = require('./without-db-validators');
 const fsHelper = require('./fs-helper');
+const getImages = require('./getImages');
 
 module.exports = {
      ...jsonResponses,
@@ -10,4 +11,5 @@ module.exports = {
      ...generateJWT,
      ...withoutDBValidators,
      ...fsHelper,
+     ...getImages,
 }
