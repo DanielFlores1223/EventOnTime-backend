@@ -4,6 +4,7 @@ const generateJWT = require('./generate-jwt');
 const withoutDBValidators = require('./without-db-validators');
 const fsHelper = require('./fs-helper');
 const getImages = require('./getImages');
+const updateStarsService = require('./calculate-stars');
 
 module.exports = {
      ...jsonResponses,
@@ -12,4 +13,5 @@ module.exports = {
      ...withoutDBValidators,
      ...fsHelper,
      ...getImages,
+     ...updateStarsService,
 }

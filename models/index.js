@@ -5,6 +5,7 @@ const Picture = require('../models/Picture');
 const ContactUs = require('./ContactUs');
 const Payment = require('./Payment');
 const Service = require('./Service');
+const Survey = require('./Survey');
 
 module.exports = {
      Role,
@@ -14,4 +15,5 @@ module.exports = {
      ContactUs,
      Payment,
      Service,
+     Survey,
 }

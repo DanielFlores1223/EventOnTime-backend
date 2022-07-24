@@ -16,7 +16,8 @@ class Server {
                picture: 'picture',
                contactUs: 'contactUs',
                payment: 'payment',
-               service: 'service'
+               service: 'service',
+               survey: 'survey',
           }
 
           this.connectDB();
