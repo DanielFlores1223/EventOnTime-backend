@@ -56,5 +56,6 @@ const updateStarsService = async ( idService = '' ) => {
 }
 
 module.exports = {
+     calculateStarts,
      updateStarsService,
 }

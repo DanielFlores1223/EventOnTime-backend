@@ -1,7 +1,7 @@
 const { request, response } = require('express');
-const { getJsonRes, getImages } = require('../helpers');
+const { getJsonRes, getImages, calculateStarts } = require('../helpers');
 const { RolesEnum } = require('../helpers/enums');
-const { Service, User, Payment } = require('../models');
+const { Service, User, Payment, Survey } = require('../models');
 
 //TODO: Get all images by each service
 const getAll = async ( req = request, res = response ) => {
@@ -79,7 +79,24 @@ const getById = async ( req = request, res = response ) => {
           const { id } = req.params;
           const service = await Service.findById( id );
           const servImg = await getImages( service );
-          res.status( 200 ).json( getJsonRes( true, 'Servicio encontrado correctamente', servImg ) );
+          const surveys = await Survey.find( { service: id } );
+          let grades = []
+
+          // Getting comments of the service
+          for (let i = 0; i < surveys.length; i++) {
+               const s = surveys[i];
+               const idUser = s.user;
+               const { name } = await User.findById( idUser );
+               const stars = await calculateStarts( s.answers );
+
+               const data = { comments: s.comments, stars, user: { name } };
+
+               grades = [ ...grades, data ];
+          }
+
+          const result = { ...servImg, grades }
+
+          res.status( 200 ).json( getJsonRes( true, 'Servicio encontrado correctamente', result ) );
      } catch (error) {
           console.log(error);
           res.status( 400 ).send( getJsonRes( false, 'Algo salió mal...' ) );
