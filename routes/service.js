@@ -20,10 +20,12 @@ router.get( '/:id', [
      validateFields
 ], controller.getById );
 
-router.get( '/myServices', [
+router.get( '/my/services', [
      validateJWT,
      validateRole( RolesEnum.proveedor )
 ], controller.getMyServices );
+
+router.get( '/search/regex', [], controller.search);
 
 router.post( '/', [
      validateJWT,

@@ -124,6 +124,45 @@ const getMyServices = async ( req = request, res = response ) => {
 
 }
 
+const search = async ( req = request, res = response ) => {
+     
+     try {
+          const { limit = 5, from = 0, pagination = 'true', search = '' } = req.query;
+          let result;
+          const p = ( pagination.toLowerCase() === 'true' );
+
+          const query = { 
+                              '$or': [ { 'name': { '$regex': search, '$options': 'i' }  }, 
+                                       { 'type': { '$regex': search, '$options': 'i' } } 
+                                     ] 
+                         } 
+          if( p ) {
+               result = await Promise.all([
+                    Service.countDocuments( query ),
+                    Service.find( query )
+                        .skip( Number( from ) )
+                        .limit( Number( limit ) )
+               ]);
+          
+          } else {
+               result = await Promise.all([
+                    Service.countDocuments( query ),
+                    Service.find( query )
+               ]);
+          }
+     
+          const [ total, services ] = result;
+          const servImg = await getImages( services );
+          const resultJson = { total, services: servImg };
+
+          res.status( 200 ).json( getJsonRes( true, 'Servicios encontrados correctamente', resultJson ) );
+
+     } catch (error) {
+          console.log(error);
+          res.status( 400 ).send( getJsonRes( false, 'Algo salió mal...' ) );
+     }
+}
+
 const create = async ( req = request, res = response ) => {
      try {
           const { rating, status, ...body } = req.body;
@@ -175,6 +214,7 @@ module.exports = {
      getAll,
      getById,
      getMyServices,
+     search,
      create,
      update,
      deleteOne,
