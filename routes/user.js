@@ -20,7 +20,7 @@ router.get( '/', [
      validateFields
 ], controller.getAll );
 
-router.get( '/profile', [
+router.get( '/my/profile', [
      validateJWT
 ], controller.getInfoProfile );
 
