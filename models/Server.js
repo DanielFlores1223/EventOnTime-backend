@@ -18,6 +18,7 @@ class Server {
                payment: 'payment',
                service: 'service',
                survey: 'survey',
+               guest: 'guest',
           }
 
           this.connectDB();

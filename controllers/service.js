@@ -1,7 +1,7 @@
 const { request, response } = require('express');
 const { getJsonRes, getImages, calculateStarts } = require('../helpers');
 const { RolesEnum } = require('../helpers/enums');
-const { Service, User, Payment, Survey } = require('../models');
+const { Service, User, Payment, Survey, Picture } = require('../models');
 
 //TODO: Get all images by each service
 const getAll = async ( req = request, res = response ) => {
@@ -88,8 +88,9 @@ const getById = async ( req = request, res = response ) => {
                const idUser = s.user;
                const { name } = await User.findById( idUser );
                const stars = await calculateStarts( s.answers );
+               const picture = await Picture.findOne( { document: idUser } );
 
-               const data = { comments: s.comments, stars, user: { name } };
+               const data = { comments: s.comments, stars, user: { name, picture } };
 
                grades = [ ...grades, data ];
           }
