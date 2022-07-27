@@ -1,7 +1,7 @@
 const { request, response } = require('express');
-const { User, Picture, Payment }= require('../models');
+const { User, Picture, Payment, Event, Guest }= require('../models');
 const bcryptjs = require('bcryptjs');
-const { generateJWT, getJsonRes } = require('../helpers');
+const { generateJWT, getJsonRes, getImages } = require('../helpers');
 const { googleVerify } = require('../helpers/google-verify');
 const { TypeAccountsEnum } = require('../helpers/enums');
 
@@ -112,9 +112,35 @@ const google = async ( req = request, res = response ) => {
 
 }
 
+const event = async ( req = request, res = response ) => {
 
+     try {
+          
+          const { codeEvent, codeInvit } = req.body;
+
+          const guest = await Guest.findOne( { code: codeInvit } ).populate('event');
+
+          if( !guest || codeEvent !== guest.event.code )
+               return res.status( 404 ).json( getJsonRes( false, 'Credenciales Incorrectas' ) );
+          
+          const event = await Event.findById( guest.event._id ).populate({
+               path: 'services',
+               select: '_id name description'
+          });
+
+          const result = await getImages( event );
+
+          res.status( 200 ).json( getJsonRes( true, `Bienvenido ${ guest.name }`, result ) );
+
+     } catch (error) {
+          console.log(error);
+          res.status( 400 ).send( getJsonRes( false, 'Algo salió mal...' ) );
+     }
+
+}
 
 module.exports = { 
      login,
-     google
+     google,
+     event
 }
