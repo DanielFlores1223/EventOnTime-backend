@@ -20,6 +20,13 @@ const isValidRoleWithoutAdmin = async ( role = '' ) => {
           throw new Error(`El rol ${role} no existe`);
 }
 
+const isValidRoleForGuest = async ( role = '' ) => {
+
+     if ( role !== RolesEnum.invitado && role !== RolesEnum.cadenero ) 
+          throw new Error(`El rol ${role} no existe`);
+          
+}
+
 const isValidTypeAccount = async ( typeAccount = '' ) => {
      const exist = await TypeAccount.findOne( { name: typeAccount } );
 
@@ -47,5 +54,6 @@ module.exports = {
      isValidTypeAccount,
      emailExist,
      documentExist,
-     isValidRoleWithoutAdmin
+     isValidRoleWithoutAdmin,
+     isValidRoleForGuest
 }

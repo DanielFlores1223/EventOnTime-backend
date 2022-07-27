@@ -5,6 +5,7 @@ const validateAccount = require('./validate-account');
 const validateImage = require('./validate-type-image');
 const validateIdExistModel = require('./validate-id-exist-model');
 const validatePayment = require('./validate-payment');
+const validatePlannerAccount = require('./validate-planner-account');
 const multer = require('./multer');
 
 module.exports = {
@@ -15,5 +16,6 @@ module.exports = {
      ...validateImage,
      ...validateIdExistModel,
      ...validatePayment,
+     ...validatePlannerAccount,
      ...multer,
 }

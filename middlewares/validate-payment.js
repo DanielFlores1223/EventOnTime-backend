@@ -13,10 +13,12 @@ const validatePayment = async ( req = request, res = response, next ) => {
       // Getting the last payment of the user
       const payment = await Payment.find( { user: _id } ).sort( { $natural:-1 } ).limit( 1 );
       
+      req.payment = payment[0];
+
       if ( dateNow >= payment[0].dateStart && dateNow <= payment[0].dateEnd ) 
            return next();
      
-      res.status(401).json( getJsonRes( false,  `Hola ${req.user.name}, lamentamos informarte que tu mensualidad ha vencido :(`) );
+      res.status(401).json( getJsonRes( false,  `Hola ${req.user.name}, lamentamos informarte que tu mensualidad de tipo ${payment[0].typeAccount} ha vencido :(`) );
 
 }
 

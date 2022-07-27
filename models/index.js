@@ -6,6 +6,8 @@ const ContactUs = require('./ContactUs');
 const Payment = require('./Payment');
 const Service = require('./Service');
 const Survey = require('./Survey');
+const Event = require('./Event');
+const Guest = require('./Guest');
 
 module.exports = {
      Role,
@@ -16,4 +18,6 @@ module.exports = {
      Payment,
      Service,
      Survey,
+     Event,
+     Guest,
 }
