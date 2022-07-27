@@ -54,8 +54,6 @@ router.post( '/register', [
         check( 'password', 'La contraseña es obligatoria' ).not().isEmpty(),
         check( 'role', 'El rol es obligatorio' ).not().isEmpty(),
         check( 'role' ).custom( isValidRoleWithoutAdmin ),
-        check( 'account', 'El rol es obligatorio' ).not().isEmpty(),
-        check( 'account' ).custom( isValidTypeAccount ),
         check( 'workstation', 'El puesto de trabajo no debe estar vacío' ).optional().not().isEmpty(),
         check( 'company', 'La compañia no debe estar vacío' ).optional().not().isEmpty(),
         validateFields,

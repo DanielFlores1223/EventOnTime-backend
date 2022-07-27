@@ -18,12 +18,12 @@ const EventSchema = new Schema({
           required: true
      },
      dateFinish: {
-          type: String,
+          type: Date,
           required: true
      },
      googleMaps: {
           type: String,
-          required: true
+          required: false
      },
      dressCode: {
           type: String,

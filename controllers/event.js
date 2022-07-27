@@ -1,8 +1,8 @@
-const { Event, Guest } = require('../models');
+const { Event, Guest, Payment } = require('../models');
 const { request, response } = require('express');
 const { getJsonRes, generateCodeRandom } = require('../helpers');
+const { sendEmailEvent } = require('../libs');
 
-//TODO: Send email to every guest
 const create = async ( req = request, res = response ) => {
 
      try {
@@ -27,6 +27,7 @@ const create = async ( req = request, res = response ) => {
           const result = await newEvent.save();
 
           // send guests
+          let guestCreated = [];
           for (let i = 0; i < guests.length; i++) {
                const g = guests[i];
                let codeGuest = 0;
@@ -40,14 +41,31 @@ const create = async ( req = request, res = response ) => {
                } while ( existGuest );
 
                //Creating a guest
+               g.code = codeGuest;
+               g.event = newEvent._id;
                const newGuest = new Guest( g );
-               await newGuest.save();
+               const gnew = await newGuest.save();
+
+               guestCreated = [ ...guestCreated, gnew._doc ];
+          
+               infoEmail = {
+                    email: gnew._doc.email,
+                    codeInv: gnew._doc.code,
+                    codeEve: newEvent.code,
+                    nameEve: newEvent.name,
+                    nameInv: gnew._doc.name,
+                    namePlanner: req.user.name
+               }
 
                //Send email
-
+               sendEmailEvent( infoEmail );
           }
 
-          const finalResult = { ...result, guests }
+          // Recording the event recorded
+          const totalEvents = req.payment.numberEvents + 1;
+          await Payment.findByIdAndUpdate( req.payment._id, { numberEvents: totalEvents } );
+          
+          const finalResult = { ...result._doc, guests: guestCreated } 
           res.status( 201 ).json( getJsonRes( true, 'Tu evento se ha creado correctamente', finalResult ) );
 
      } catch (error) {

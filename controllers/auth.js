@@ -1,5 +1,5 @@
 const { request, response } = require('express');
-const { User, Picture }= require('../models');
+const { User, Picture, Payment }= require('../models');
 const bcryptjs = require('bcryptjs');
 const { generateJWT, getJsonRes } = require('../helpers');
 const { googleVerify } = require('../helpers/google-verify');
@@ -69,6 +69,25 @@ const google = async ( req = request, res = response ) => {
 
                const pictureNew = new Picture( dataPicture );
                await pictureNew.save();
+
+               // Recording the first payment free (it's default)
+               const payment = {
+                    numberCard: '-',
+                    nameOwnerCard: '-',
+                    expiration: '-',
+                    amount: 0,
+                    user: user._id
+               };
+
+               // Get currently date and add one month
+               payment.dateStart = new Date();
+               let d = new Date();
+               const dateFinish = new Date(d.setMonth(d.getMonth() + 1));
+               payment.dateEnd = dateFinish;
+
+               // Saving the payment created
+               const paymentNew = new Payment( payment );
+               await paymentNew.save();
           }
 
           if( !user.status ) 

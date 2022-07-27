@@ -22,7 +22,7 @@ const GuestSchema = new Schema({
      },
      numberPartner: {
           type: Number,
-          default: 1
+          default: 0
      },
      email: {
           type: String,
@@ -33,7 +33,7 @@ const GuestSchema = new Schema({
           ref: 'Event',
           required: true,
      },
-     rol: {
+     role: {
           type: String,
           required: true,
           default: 'Invitado'

@@ -1,9 +1,9 @@
 // TODO: Add a record of payment when the user is created
-
 const { request, response } = require('express');
 const { getJsonRes, generateJWT } = require('../helpers');
+const { TypeAccountsEnum } = require('../helpers/enums');
 const bcryptjs = require('bcryptjs')
-const { User } = require('../models');
+const { User, Payment } = require('../models');
 
 const getAll = async ( req = request, res = response ) => {
 
@@ -98,7 +98,13 @@ const register = async ( req = request, res = response ) => {
                dataCompany = { company, workstation };
           }
 
-          const user = new User( { name, email, password, status, account, role, company: dataCompany } );
+          const user = new User( { name, 
+                                   email, 
+                                   password, 
+                                   status, 
+                                   account: TypeAccountsEnum.gratuito, 
+                                   role, 
+                                   company: dataCompany } );
 
           // Encrypting user password
           const salt = bcryptjs.genSaltSync();
@@ -115,6 +121,25 @@ const register = async ( req = request, res = response ) => {
 
           if( Object.keys( info.company ).length > 0 )
                result.company = info.company
+
+          // Recording the first payment free (it's default)
+          const payment = {
+               numberCard: '-',
+               nameOwnerCard: '-',
+               expiration: '-',
+               amount: 0,
+               user: info._id
+          };
+
+          // Get currently date and add one month
+          payment.dateStart = new Date();
+          let d = new Date();
+          const dateFinish = new Date(d.setMonth(d.getMonth() + 1));
+          payment.dateEnd = dateFinish;
+
+
+          const paymentNew = new Payment( payment );
+          await paymentNew.save();
 
           res.status( 201 ).json( getJsonRes( true, ` Bienvenido ${user.name} a Event on Time`, result ) );
 
