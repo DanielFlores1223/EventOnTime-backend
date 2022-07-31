@@ -14,6 +14,21 @@ const validateRole = ( ...roles ) => {
      }
 }
 
+const validateRoleMovil = ( ...roles ) => {
+    
+     return ( req, res, next ) => {
+
+          if( !req.guest )
+               return res.status(500).json( getJsonRes( false, 'Error en la autenticación del usuario' ) );
+          
+          if( !roles.includes( req.guest.role ) )
+               return res.status(401).json( getJsonRes( false,  `${req.guest.name} no tiene permisos para realizar está acción`) );
+
+          next();
+     }
+}
+
 module.exports = {
      validateRole,
+     validateRoleMovil
 }

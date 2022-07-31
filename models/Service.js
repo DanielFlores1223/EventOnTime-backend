@@ -43,4 +43,12 @@ const ServiceSchema = new Schema({
      }
 });
 
+ServiceSchema.methods.toJSON = function() {
+
+     // Editing data result of this collections 
+     const { __v, ...service } = this.toObject();
+
+     return service;
+}
+
 module.exports = model( 'Service', ServiceSchema );
