@@ -13,6 +13,9 @@ const validatePayment = async ( req = request, res = response, next ) => {
       // Getting the last payment of the user
       const payment = await Payment.find( { user: _id } ).sort( { $natural:-1 } ).limit( 1 );
       
+      if( payment.length === 0 )
+          return res.status( 400 ).json( getJsonRes( false,  `Hola ${req.user.name}, tu cuenta no tiene ningun tipo de cuenta seleccionada:(`) );
+
       req.payment = payment[0];
 
       if ( dateNow >= payment[0].dateStart && dateNow <= payment[0].dateEnd ) 

@@ -123,12 +123,29 @@ const event = async ( req = request, res = response ) => {
           if( !guest || codeEvent !== guest.event.code )
                return res.status( 404 ).json( getJsonRes( false, 'Credenciales Incorrectas' ) );
           
-          const event = await Event.findById( guest.event._id ).populate({
+          if( !guest.event.status )
+               return res.status( 404 ).json( getJsonRes( false, 'El evento fue cancelado' ) );
+          
+          const dateNow = new Date();
+          const dateFinish = new Date(guest.event.dateFinish);
+          
+          if( dateNow.getTime() >= dateFinish.getTime() )
+               return res.status(401).json( getJsonRes( false, 'El evento al que intenta entrar ha terminado' ) );
+          
+          const eventFound = await Event.findById( guest.event._id ).populate({
                path: 'services',
                select: '_id name description'
           });
 
-          const result = await getImages( event );
+          const token = await generateJWT( guest._id );
+          const resultImg = await getImages( eventFound );
+          const result = { ...resultImg, guest: { _id: guest._id,
+                                                  name: guest.name, 
+                                                  role: guest.role, 
+                                                  assitence: guest.assitence,
+                                                  numberPartner: guest.numberPartner,
+                                                  email: guest.email,
+                                                  token } };
 
           res.status( 200 ).json( getJsonRes( true, `Bienvenido ${ guest.name }`, result ) );
 
