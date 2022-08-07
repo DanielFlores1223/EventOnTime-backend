@@ -10,7 +10,7 @@ const getLastCreditCard = async ( req = request, res = response ) => {
           // Get the last register of the user
           const result = await Payment.find( { user: _id } ).sort({$natural:-1}).limit(1);
 
-          const { numberCard, nameOwnerCard, expiration } = result[0];
+          const { numberCard, nameOwnerCard, expiration } = result[0]._doc;
           const data = { numberCard, nameOwnerCard, expiration }
 
           res.status( 200 ).json( getJsonRes( true, 'La información de la última tarjeta que utilizaste se realizó correctamente', data ) );
@@ -30,9 +30,9 @@ const getInfoLastPayment = async ( req = request, res = response ) => {
           // Get the last register of the user
           const result = await Payment.find( { user: _id } ).sort({$natural:-1}).limit(1);
 
-          const { numberCard, nameOwnerCard, expiration, ...rest } = result[0];
+          const { numberCard, nameOwnerCard, expiration, ...rest } = result[0]._doc;
 
-          res.status( 200 ).json( getJsonRes( true, 'La información de la última tarjeta que utilizaste se realizó correctamente', rest ) );
+          res.status( 200 ).json( getJsonRes( true, 'Información de tu último pago realizado correctamente', rest ) );
 
      } catch (error) {
           console.log(error);
