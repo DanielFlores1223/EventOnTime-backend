@@ -1,11 +1,24 @@
 const { Router } = require('express');
 const { check } = require('express-validator');
-const { isValidRoleForGuest } = require('../helpers');
+const { isValidRoleForGuest, documentExist } = require('../helpers');
 const { RolesEnum } = require('../helpers/enums');
 const { validateJWT, validateRole, validateFields, validatePayment, validatePlannerAccount } = require('../middlewares');
 const controller = require('../controllers/event');
 
 const router = Router();
+
+router.get( '/my/events', [
+     validateJWT,
+     validateRole( RolesEnum.planificador ),
+], controller.getMyEvents );
+
+router.get('/:id', [
+     validateJWT,
+     validateRole( RolesEnum.planificador ),
+     check( 'id', 'No es un id válido' ).isMongoId(),
+     check( 'id' ).custom( id => documentExist( id, 'Event' ) ),
+     validateFields,
+], controller.getEvent );
 
 router.post( '/', [
      validateJWT,
@@ -29,5 +42,13 @@ router.post( '/', [
      check( 'guests.*.role' ).custom( isValidRoleForGuest ),
      validateFields,
 ], controller.create );
+
+/*router.put( '/:id', [
+     validateJWT,
+     validateRole( RolesEnum.planificador ),
+     validatePayment,
+     validatePlannerAccount,
+
+], controller )*/
 
 module.exports = router;
