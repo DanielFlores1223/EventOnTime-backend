@@ -1,7 +1,67 @@
 const { Event, Guest, Payment } = require('../models');
 const { request, response } = require('express');
-const { getJsonRes, generateCodeRandom } = require('../helpers');
+const { getJsonRes, generateCodeRandom, getImages } = require('../helpers');
 const { sendEmailEvent } = require('../libs');
+
+const getMyEvents = async ( req = request, res = response ) => {
+     try {
+          const { _id } = req.user;
+          const { limit = 5, from = 0, pagination = 'true' } = req.query;
+          let result;
+
+          const p = ( pagination.toLowerCase() === 'true' );
+
+          const query = { '$and': [ { panner: _id }, { status: true } ] }
+          if( p ) {
+               result = await Promise.all([
+                    Event.countDocuments( query ),
+                    Event.find( query )
+                        .skip( Number( from ) )
+                        .limit( Number( limit ) )
+               ]);
+          
+          } else {
+               result = await Promise.all([
+                    Event.countDocuments( query ),
+                    Event.find( query )
+               ]);
+          }
+
+          const [ total, events ] = result;
+          const servImg = await getImages( events );
+          const resultJson = { total, events: servImg }
+
+          res.status( 200 ).json( getJsonRes( true, 'Tus eventos se han encontrado correctamente', resultJson ) );
+
+     } catch (error) {
+          console.log(error);
+          res.status( 400 ).send( getJsonRes( false, 'Algo salió mal...' ) );
+     }
+} 
+
+const getEvent = async ( req = request, res = response ) => {
+
+     try {
+
+          const { id } = req.params;
+          const eventFound = await Event.findById( id ).populate({
+               path: 'services',
+               select: '_id name type description price phone rating status'
+          });
+
+          const resultImg = await getImages( eventFound );
+          const guests = await Guest.find( { event: id } );
+
+          const result = { ...resultImg, guests };
+
+          res.status( 200 ).json( getJsonRes( true, 'El evento se han encontrado correctamente', result ) );
+
+     } catch (error) {
+          console.log(error);
+          res.status( 400 ).send( getJsonRes( false, 'Algo salió mal...' ) );
+     }
+
+}
 
 const create = async ( req = request, res = response ) => {
 
@@ -78,5 +138,7 @@ const create = async ( req = request, res = response ) => {
 
 
 module.exports = {
+     getMyEvents,
+     getEvent,
      create,
 }
