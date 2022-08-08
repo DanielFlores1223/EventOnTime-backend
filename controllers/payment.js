@@ -50,11 +50,24 @@ const create = async ( req = request, res = response ) => {
           body.user = _id;
           body.dateStart = new Date();
 
-          // Add a year date currently
-          let d = new Date();
-          const dateFinish = new Date(d.setMonth(d.getMonth() + 1));
-          body.dateEnd = dateFinish;
+          //
+          
+          // Getting the last payment of the user
+          const payment = await Payment.find( { user: _id } ).sort( { $natural:-1 } ).limit( 1 );
 
+          const dateNow = new Date();
+
+          if ( dateNow >= payment[0].dateStart && dateNow <= payment[0].dateEnd ) {
+                let d2 = new Date( payment[0].dateEnd );
+                let dateFinishExist = new Date( d2.setMonth( d2.getMonth() + 1 ) );
+                body.dateEnd = dateFinishExist;
+          } else {
+                // Add a year date currently
+                let d = new Date();
+                const dateFinish = new Date(d.setMonth(d.getMonth() + 1));
+                body.dateEnd = dateFinish;
+          }
+          
           //Get info about the user
           const user = await User.findById( _id );
 
