@@ -57,7 +57,7 @@ const create = async ( req = request, res = response ) => {
 
           const dateNow = new Date();
 
-          if ( dateNow >= payment[0].dateStart && dateNow <= payment[0].dateEnd ) {
+          if ( payment.length > 0 && dateNow >= payment[0].dateStart && dateNow <= payment[0].dateEnd ) {
                 let d2 = new Date( payment[0].dateEnd );
                 let dateFinishExist = new Date( d2.setMonth( d2.getMonth() + 1 ) );
                 body.dateEnd = dateFinishExist;
