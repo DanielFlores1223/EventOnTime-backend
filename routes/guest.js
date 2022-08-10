@@ -2,9 +2,17 @@
  const { check } = require('express-validator');
  const { RolesEnum } = require('../helpers/enums');
  const { documentExist } = require('../helpers');
- const { validateFields, validateJWTGuest, validateRoleMovil, validateEventDates } = require('../middlewares');
+ const { validateFields, validateJWTGuest, validateRoleMovil, validateEventDates, validateJWT } = require('../middlewares');
  const controller = require('../controllers/guest');
  const router = Router();
+
+
+ router.get( '/:id', [
+    validateJWT,
+    check('id', 'Id es inválido').isMongoId(),
+    check( 'id' ).custom( id => documentExist( id, 'Guest' ) ),
+    validateFields,
+ ], controller.getById );
 
  router.put( '/assitence/confirmation', [
      validateJWTGuest,

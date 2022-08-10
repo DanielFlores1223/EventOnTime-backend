@@ -2,6 +2,21 @@ const { request, response } = require('express');
 const { Guest } = require('../models');
 const { getJsonRes } = require('../helpers');
 
+const getById = async ( req = request, res = response ) => {
+
+     try {
+          const { id } = req.params;
+          const guest = await Guest.findById( id );
+
+          res.status( 200 ).json( getJsonRes( true, 'La información del invitado se encontró correctamente', guest ) );
+
+     } catch (error) {
+          console.log(error);
+          res.status( 400 ).send( getJsonRes( false, 'Algo salió mal...' ) );
+     }
+
+}
+
 const updateAssistenceConfirmation = async ( req = request, res = response ) => {
 
      try {
@@ -43,4 +58,5 @@ const updateAssistence = async ( req = request, res = response ) => {
 module.exports = {
      updateAssistenceConfirmation,
      updateAssistence,
+     getById
 }
