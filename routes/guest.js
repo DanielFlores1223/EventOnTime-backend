@@ -8,7 +8,7 @@
 
 
  router.get( '/:id', [
-    validateJWT,
+    validateJWTGuest,
     check('id', 'Id es inválido').isMongoId(),
     check( 'id' ).custom( id => documentExist( id, 'Guest' ) ),
     validateFields,
