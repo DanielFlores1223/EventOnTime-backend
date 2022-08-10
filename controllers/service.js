@@ -18,8 +18,8 @@ const getAll = async ( req = request, res = response ) => {
                const p = providers[i];
                
                const lastPayment = await Payment.find( { user: p._id } ).sort( { $natural:-1 } ).limit( 1 );
-
-               if ( dateNow >= lastPayment[0].dateStart && dateNow <= lastPayment[0].dateEnd ) {
+               console.log(p)
+               if (  dateNow >= lastPayment[0].dateStart && dateNow <= lastPayment[0].dateEnd ) {
                     idsTrue = [ ...idsTrue, p._id ];
                     continue;
                }
@@ -150,9 +150,15 @@ const search = async ( req = request, res = response ) => {
           const p = ( pagination.toLowerCase() === 'true' );
 
           const query = { 
-                              '$or': [ { 'name': { '$regex': search, '$options': 'i' }  }, 
-                                       { 'type': { '$regex': search, '$options': 'i' } } 
-                                     ] 
+                              '$and': [
+                                   { 'status': true },
+                                   {
+                                        '$or': [  { 'name': { '$regex': search, '$options': 'i' }  }, 
+                                                  { 'type': { '$regex': search, '$options': 'i' } } 
+                                               ] 
+                                   }
+                              ]
+                                   
                          } 
           if( p ) {
                result = await Promise.all([
