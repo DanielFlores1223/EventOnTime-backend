@@ -1,9 +1,10 @@
 // TODO: Add a record of payment when the user is created
 const { request, response } = require('express');
-const { getJsonRes, generateJWT } = require('../helpers');
+const { getJsonRes, generateJWT, getImages } = require('../helpers');
 const { TypeAccountsEnum } = require('../helpers/enums');
 const bcryptjs = require('bcryptjs')
 const { User, Payment } = require('../models');
+const mongoose = require('mongoose');
 
 const getAll = async ( req = request, res = response ) => {
 
@@ -198,6 +199,106 @@ const deleteOne = async ( req = request, res = response ) => {
      }
 }
 
+// FAVORITES
+const addFavorites = async ( req = request, res = response ) => {
+
+     try {     
+          const { idService } = req.body;
+          const { _id } = req.user;
+
+          if ( req.user.favorites.includes( idService ) ) {
+               return res.status( 400 ).send( getJsonRes( false, 'Este servicio ya está agregado a tus favoritos' ) );
+          }
+
+          const user = await User.findById( _id );
+          const { favorites } = user;
+
+          const newFavorites = [ ...favorites, idService ];
+
+          user.favorites = newFavorites;
+
+          await user.save();
+          res.status( 200 ).send( getJsonRes( true, 'Servicio agregado a favoritos', user ) );
+
+     } catch (error) {
+          console.log(error);
+          res.status( 400 ).send( getJsonRes( false, 'Algo salió mal...' ) );
+     }
+
+}
+
+const getFavorites = async ( req = request, res = response ) => {
+     try {
+          const { limit = 5, from = 0, /*pagination = 'true'*/ search = '' } = req.query;
+          let result = [];
+          //const p = ( pagination.toLowerCase() === 'true' );
+
+          const { _id } = req.user;
+          
+          const userFav = await User.findById( _id ).populate('favorites');
+          const { favorites } = userFav;
+
+          const favoritesImg = await getImages( favorites );
+
+          const regex = new RegExp( search, 'i' )
+          // Searching for regex of search
+          for (let i = 0; i < favoritesImg.length; i++) {
+               const f = favoritesImg[i];
+
+               if( f.name.match(regex) || f.type.match(regex) )
+                    result = [ ...result, f ];
+          }
+
+          //console.log(result)
+
+          let resultPag = [];
+          let fromArr = from;
+          //Pagination
+          for (let i = 0; i < limit; i++) {
+               if( fromArr >= result.length )
+                    break;
+
+               resultPag = [ ...resultPag, result[ fromArr ] ];
+               fromArr++;
+          }
+
+          const resultJson = { total: result.length , services: resultPag };
+          res.status( 200 ).json( getJsonRes( true, 'Servicios encontrados correctamente', resultJson ) );
+     } catch (error) {
+          console.log(error);
+          res.status( 400 ).send( getJsonRes( false, 'Algo salió mal...' ) );
+     }
+}
+
+const removeFavorites = async ( req = request, res = response ) => {
+
+     try {     
+          const { idService } = req.body;
+          const { _id } = req.user;
+
+          const idMongo = new mongoose.Types.ObjectId(idService);
+          
+          const user = await User.findById( _id );
+          const { favorites } = user;
+
+          const newFavorites = favorites.filter( f => String(f) !== String(idMongo) );
+
+          if ( newFavorites.length === favorites.length ) {
+               return res.status( 400 ).send( getJsonRes( false, 'Este servicio no se encuentra en tus favoritos' ) );
+          }
+
+          user.favorites = newFavorites;
+
+          await user.save();
+          res.status( 200 ).send( getJsonRes( true, 'Servicio eliminado de favoritos', user ) );
+
+     } catch (error) {
+          console.log(error);
+          res.status( 400 ).send( getJsonRes( false, 'Algo salió mal...' ) );
+     }
+
+}
+
 module.exports = {
      getAll,
      getById,    
@@ -206,4 +307,7 @@ module.exports = {
      register,
      update,
      deleteOne,
+     addFavorites,
+     getFavorites,
+     removeFavorites
 }

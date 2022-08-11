@@ -59,7 +59,6 @@ router.post( '/register', [
         validateFields,
    ], controller.register );
 
-
 router.put( '/profile', [
     validateJWT,
     check( 'name', 'El nombre no debe estar vacío').optional().not().isEmpty(),
@@ -77,5 +76,28 @@ router.delete( '/:id', [
     check( 'id' ).custom( id => documentExist( id, 'User' ) ),
     validateFields,
 ], controller.deleteOne );
+
+//Favorites
+router.post( '/add/favorites', [
+    validateJWT,
+    validateRole( RolesEnum.planificador ),
+    check( 'idService', 'No es un id válido' ).isMongoId(),
+    check( 'idService' ).custom( id => documentExist( id, 'Service' ) ),
+    validateFields,
+], controller.addFavorites );
+
+router.get( '/get/favorites', [
+     validateJWT,
+     validateRole( RolesEnum.planificador ),
+ ], controller.getFavorites );
+
+router.put( '/remove/favorites', [
+    validateJWT,
+    validateRole( RolesEnum.planificador ),
+    check( 'idService', 'No es un id válido' ).isMongoId(),
+    check( 'idService' ).custom( id => documentExist( id, 'Service' ) ),
+    validateFields,
+], controller.removeFavorites );
+
  
 module.exports = router;

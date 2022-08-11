@@ -117,22 +117,35 @@ const getMyServices = async ( req = request, res = response ) => {
      try {
           
           const { _id } = req.user;
-          const { limit = 5, from = 0, pagination = 'true' } = req.query;
+          const { limit = 5, from = 0, pagination = 'true',search = '' } = req.query;
           let result;
           const p = ( pagination.toLowerCase() === 'true' );
 
+          const query = { 
+               '$and': [
+                    { 'status': true },
+                    { 'user': _id },
+                    {
+                         '$or': [  { 'name': { '$regex': search, '$options': 'i' }  }, 
+                                   { 'type': { '$regex': search, '$options': 'i' } } 
+                                ] 
+                    }
+               ]
+                    
+          } 
+
           if( p ) {
                result = await Promise.all([
-                    Service.countDocuments( { user: _id } ),
-                    Service.find( { user: _id } )
+                    Service.countDocuments( query ),
+                    Service.find( query )
                         .skip( Number( from ) )
                         .limit( Number( limit ) )
                ]);
           
           } else {
                result = await Promise.all([
-                    Service.countDocuments( { user: _id } ),
-                    Service.find( { user: _id } )
+                    Service.countDocuments( query ),
+                    Service.find( query )
                ]);
           }
      
