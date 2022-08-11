@@ -78,7 +78,14 @@ const getById = async ( req = request, res = response ) => {
      try {
           const { id } = req.params;
           const service = await Service.findById( id ).populate('provider');
-          const servImg = await getImages( service );
+          const { provider, ...rest } = service;
+          const provImg = await getImages( provider );
+          const servicePlusProv = { _doc: { ...rest._doc } };
+          // Delete other fields in info prov
+          const { password, favorites, google, account, ...infoProvFinal } = provImg;
+          servicePlusProv._doc.provider = infoProvFinal;
+          
+          const servImg = await getImages( servicePlusProv );
           const surveys = await Survey.find( { service: id } );
           let grades = []
 
