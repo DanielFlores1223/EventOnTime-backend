@@ -77,7 +77,7 @@ const getById = async ( req = request, res = response ) => {
 
      try {
           const { id } = req.params;
-          const service = await Service.findById( id );
+          const service = await Service.findById( id ).populate('provider');
           const servImg = await getImages( service );
           const surveys = await Survey.find( { service: id } );
           let grades = []
