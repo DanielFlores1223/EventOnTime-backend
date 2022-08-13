@@ -142,6 +142,7 @@ const event = async ( req = request, res = response ) => {
           const result = { ...resultImg, guest: { _id: guest._id,
                                                   name: guest.name, 
                                                   role: guest.role, 
+                                                  confirmation: guest.confirmation,
                                                   assitence: guest.assitence,
                                                   numberPartner: guest.numberPartner,
                                                   email: guest.email,
