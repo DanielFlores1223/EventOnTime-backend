@@ -31,7 +31,10 @@ const getPendingSurveys = async ( req = request, res = response ) => {
      try {
           
           const { _id } = req.user;
-          const surveys = await Survey.find( { user: _id } );
+          const surveys = await Survey.find( { user: _id } ).populate( {path: 'service',
+                                                                       select: '_id name description'} )
+                                                            .populate( { path: 'user', select: 'name' } )
+                                                            .populate({ path:'event', select: 'name type dateStart dateFinish' });
           let result = [];
 
           for (let i = 0; i < surveys.length; i++) {
