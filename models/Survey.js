@@ -1,7 +1,7 @@
 const { Schema, model, Types } = require('mongoose');
 
 const SurveySchema = new Schema({
-     answers: [ { type: Boolean } ],
+     answers: [ { type: Boolean, required: false } ],
      comments: {
           type: String,
           required: false

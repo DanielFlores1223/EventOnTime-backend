@@ -16,4 +16,18 @@ router.post( '/idService/:id', [
      validateFields,
 ], controller.create );
 
+router.get( '/pending/surveys', [
+     validateJWT,
+     validateRole( RolesEnum.planificador ),
+], controller.getPendingSurveys );
+
+router.put( '/answerSurvey/:id', [
+     validateJWT,
+     validateRole( RolesEnum.planificador ),
+     check( 'answers', 'Las respuestas deben se un arreglo de boleanos' ).isArray(),
+     check( 'id', 'Id de servicio inválido' ).isMongoId(),
+     check( 'id' ).custom( id => documentExist( id, 'Survey' ) ),
+     validateFields,
+], controller.answerSurvey );
+
 module.exports = router;

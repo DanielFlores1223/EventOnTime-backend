@@ -92,6 +92,10 @@ const getById = async ( req = request, res = response ) => {
           // Getting comments of the service
           for (let i = 0; i < surveys.length; i++) {
                const s = surveys[i];
+               
+               if( s.answers.length === 0 ) 
+                    continue;
+                    
                const idUser = s.user;
                const { name } = await User.findById( idUser );
                const stars = await calculateStarts( s.answers );

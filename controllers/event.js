@@ -1,4 +1,4 @@
-const { Event, Guest, Payment } = require('../models');
+const { Event, Guest, Payment, Service, Survey } = require('../models');
 const { request, response } = require('express');
 const { getJsonRes, generateCodeRandom, getImages } = require('../helpers');
 const { sendEmailEvent } = require('../libs');
@@ -126,6 +126,24 @@ const create = async ( req = request, res = response ) => {
 
                //Send email
                sendEmailEvent( infoEmail );
+          }
+
+          // Creating surveys for each service in the event
+          for (let i = 0; i < body.services.length; i++) {
+               const serv = body.services[i];
+
+               const surveyData = {
+                    answers: [],
+                    comments: '',
+                    user: req.user._id,
+                    service: serv, //id service
+                    event: result._id
+               }
+
+               console.log(surveyData);
+               const surveyNew = new Survey( surveyData );
+               await surveyNew.save();
+               
           }
 
           // Recording the event recorded
