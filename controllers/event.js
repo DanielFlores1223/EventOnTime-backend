@@ -6,12 +6,19 @@ const { sendEmailEvent } = require('../libs');
 const getMyEvents = async ( req = request, res = response ) => {
      try {
           const { _id } = req.user;
-          const { limit = 5, from = 0, pagination = 'true' } = req.query;
+          const { limit = 5, from = 0, pagination = 'true', search='' } = req.query;
           let result;
 
           const p = ( pagination.toLowerCase() === 'true' );
 
-          const query = { '$and': [ { panner: _id }, { status: true } ] }
+          const query = { '$and': [ { planner: _id }, 
+                                    { status: true },
+                                    {
+                                        '$or': [  { 'name': { '$regex': search, '$options': 'i' }  }, 
+                                                  { 'type': { '$regex': search, '$options': 'i' } } 
+                                               ] 
+                                    }
+                                  ] }
           if( p ) {
                result = await Promise.all([
                     Event.countDocuments( query ),

@@ -13,6 +13,10 @@ const SurveySchema = new Schema({
      service: {
           type: Types.ObjectId,
           ref: 'Service'
+     },
+     event: {
+          type: Types.ObjectId,
+          ref: 'Event'
      }
 });
 
