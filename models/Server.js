@@ -20,6 +20,7 @@ class Server {
                survey: 'survey',
                event: 'event',
                guest: 'guest',
+               stadistic: 'stadistic',
           }
 
           this.connectDB();
