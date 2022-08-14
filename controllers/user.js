@@ -61,7 +61,8 @@ const getInfoProfile = async ( req = request, res = response ) => {
 
           const { _id, account } = req.user;
           const user = await User.findById( _id );
-          res.status( 200 ).json( getJsonRes( true, 'La información del usuario se encontró correctamente', user ) );
+          const userImg = await getImages( user );
+          res.status( 200 ).json( getJsonRes( true, 'La información del usuario se encontró correctamente', userImg ) );
 
      } catch (error) {
           console.log(error);
