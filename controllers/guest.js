@@ -55,8 +55,24 @@ const updateAssistence = async ( req = request, res = response ) => {
 
 }
 
+const deleteGuest = async ( req = request, res = response ) => {
+
+     try {
+
+          const { id } = req.params;
+          const guest = await Guest.findByIdAndDelete( id );
+          res.status( 200 ).send( getJsonRes( true, 'Inivitado eliminado del evento', guest ) );
+
+     } catch (error) {
+          console.log(error);
+          res.status( 400 ).send( getJsonRes( false, 'Algo salió mal...' ) );
+     }
+
+}
+
 module.exports = {
      updateAssistenceConfirmation,
      updateAssistence,
-     getById
+     getById,
+     deleteGuest
 }

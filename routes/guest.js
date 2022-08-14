@@ -2,7 +2,7 @@
  const { check } = require('express-validator');
  const { RolesEnum } = require('../helpers/enums');
  const { documentExist } = require('../helpers');
- const { validateFields, validateJWTGuest, validateRoleMovil, validateEventDates, validateJWT } = require('../middlewares');
+ const { validateFields, validateJWTGuest, validateRoleMovil, validateEventDates, validateJWT, validateRole } = require('../middlewares');
  const controller = require('../controllers/guest');
  const router = Router();
 
@@ -27,6 +27,14 @@
     check('id', 'Id es inválido').isMongoId(),
     check( 'id' ).custom( id => documentExist( id, 'Guest' ) ),
     validateFields,
-], controller.updateAssistence )
+], controller.updateAssistence );
+
+router.delete( '/:id', [
+    validateJWT,
+    validateRole( RolesEnum.planificador ),
+    check('id', 'Id es inválido').isMongoId(),
+    check( 'id' ).custom( id => documentExist( id, 'Guest' ) ),
+    validateFields,
+], controller.deleteGuest );
 
  module.exports = router;
