@@ -128,7 +128,7 @@ const getMyServices = async ( req = request, res = response ) => {
           const query = { 
                '$and': [
                     { 'status': true },
-                    { 'user': _id },
+                    { 'provider': _id },
                     {
                          '$or': [  { 'name': { '$regex': search, '$options': 'i' }  }, 
                                    { 'type': { '$regex': search, '$options': 'i' } } 
