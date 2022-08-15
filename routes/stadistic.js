@@ -9,4 +9,9 @@ router.get( '/dashboard/planner', [
      validateRole( RolesEnum.planificador )
 ], controller.getDataDashboardPlanner );
 
+router.get( '/dashboard/planner/movil', [
+     validateJWT,
+     validateRole( RolesEnum.planificador )
+], controller.getDataPlannerMovilApp );
+
 module.exports = router;
