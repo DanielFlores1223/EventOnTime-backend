@@ -9,6 +9,11 @@ router.get( '/dashboard/planner', [
      validateRole( RolesEnum.planificador )
 ], controller.getDataDashboardPlanner );
 
+router.get( '/dashboard/provider', [
+     validateJWT,
+     validateRole( RolesEnum.proveedor )
+], controller.getDataDashboardProveer );
+
 router.get( '/dashboard/planner/movil', [
      validateJWT,
      validateRole( RolesEnum.planificador )
