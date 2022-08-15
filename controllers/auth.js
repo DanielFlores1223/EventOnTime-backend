@@ -24,10 +24,11 @@ const login = async ( req = request, res = response ) => {
 
           const token = await generateJWT( user._id );
           
-          const picture = await Picture.findOne( { document: user._id } );
+          //find( { document: user._id } ).sort( { $natural:-1 } ).limit( 1 );
+          const picture = await Picture.find( { document: user._id } ).sort( { $natural:-1 } ).limit( 1 );
           const info = user._doc;
           const { name, account, role } = info;
-          const result = { name, account, role, picture, token };
+          const result = { name, account, role, picture: picture[0], token };
 
           res.status( 200 ).json( getJsonRes( true, `Bienvenido ${ name }`, result ) );
           
