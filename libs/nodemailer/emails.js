@@ -12,8 +12,8 @@ const sendEmailEvent = async ( infObj ) => {
        html: `<p> Un gusto saludarte ${nameInv}, has sido invitado a un evento </p>
               <p> <span style="font-weight: bold;">Evento: </span>${ nameEve } </p>
               <h4>Credenciales para ver la inivitación en la app móvil</h4>
-              <p> <span style="font-weight: bold;>Código evento: </span>${ codeEve } </p>
-              <p> <span style="font-weight: bold;>Código invitado: </span>${ codeInv } </p>
+              <p> <span style="font-weight: bold;">Código evento: </span>${ codeEve } </p>
+              <p> <span style="font-weight: bold;">Código invitado: </span>${ codeInv } </p>
               <a href="https://eventontime.netlify.app">Descarga app móvil aquí</a>
              `
      });
