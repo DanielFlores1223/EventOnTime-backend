@@ -10,11 +10,13 @@ const sendEmailEvent = async ( infObj ) => {
        subject: `Hola ${nameInv}, te han invitado a un evento`,
        text: '',
        html: `<p> Un gusto saludarte ${nameInv}, has sido invitado a un evento </p>
-              <p> <bold>Evento: </bold>${ nameEve } </p>
-              <h5>Credenciales para ver la inivitación en la app móvil</h5>
-              <p> <bold>Código evento: </bold>${ codeEve } </p>
-              <p> <bold>Código invitado: </bold>${ codeInv } </p>
-              <a href="https://eventontime.netlify.app">Desgarga app móvil aquí</a>
+              <p> <span style="font-weight: bold;">Evento: </span>${ nameEve } </p>
+              <h3>Credenciales para ver la inivitación en la app móvil</h3>
+              <p> <span style="font-weight: bold;>Código evento: </span>${ codeEve } </p>
+              <p> <span style="font-weight: bold;>Código invitado: </span>${ codeInv } </p>
+
+              <p>Para poder ver la invitación es necesario tener la aplicación móvil en tu dispositivo :)</p>
+              <a style=" background-color: #535E8A; padding: 1rem; border-radius: 5px; " href="https://eventontime.netlify.app">Desgarga app móvil aquí</a>
              `
      });
    
@@ -30,7 +32,11 @@ const sendEmailEventCancelled = async ( infObj ) => {
        to: email,
        subject: `Hola ${nameInv}, Evento cancelado`,
        text: '',
-       html: `<p> Un gusto saludarte ${nameInv}, este correo es para informarte que se ha cancelado el evento: </p>`
+       html: `<p> Un gusto saludarte ${nameInv}, este correo es para informarte que se ha cancelado el evento: ${nameEve}. </p>
+       
+          <p> Muchas gracias por su atención. </p>
+          <p> Saludos. </p>
+       `
      });
    
      console.log("Message sent: %s by %s", info.messageId);
