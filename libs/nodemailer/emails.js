@@ -14,9 +14,8 @@ const sendEmailEvent = async ( infObj ) => {
               <h3>Credenciales para ver la inivitación en la app móvil</h3>
               <p> <span style="font-weight: bold;>Código evento: </span>${ codeEve } </p>
               <p> <span style="font-weight: bold;>Código invitado: </span>${ codeInv } </p>
-
               <p>Para poder ver la invitación es necesario tener la aplicación móvil en tu dispositivo :)</p>
-              <a style=" background-color: #535E8A; padding: 1rem; border-radius: 5px; " href="https://eventontime.netlify.app">Desgarga app móvil aquí</a>
+              <a href="https://eventontime.netlify.app">Descarga app móvil aquí</a>
              `
      });
    
